@@ -1,5 +1,5 @@
-#include <lista.h>
-#include <pila.h>
+#include "lista.h"
+#include "pila.h"
 
 
 typedef struct pila {
@@ -12,7 +12,10 @@ pila_t *pila_crear(){
     if(!pila)return NULL;
 
     pila->lista = lista_crear();
-    if(!pila->lista) free(pila); return NULL;
+    if(!pila->lista) {
+        free(pila);
+        return NULL;
+    }
     return pila;
 }
 
@@ -24,9 +27,9 @@ bool pila_apilar(pila_t *pila, void *elemento){
 
 
 void *pila_desapilar(pila_t *pila){
-    if(!pila) return NULL;
-    size_t ultima_posicion = lista_cantidad(pila->lista ) -1;
-    return lista_eliminar_elemento(pila->lista , ultima_posicion);
+    if(!pila || lista_vacia(pila->lista)) return NULL;
+    size_t ultima_posicion = lista_cantidad(pila->lista) - 1;
+    return lista_eliminar_elemento(pila->lista, ultima_posicion);
 }
 
 

@@ -1,4 +1,6 @@
 #include "src/lista.h"
+#include "src/pila.h"
+#include "src/cola.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -170,5 +172,266 @@ int main() {
     test_iterador_siguiente();
     test_iterador_destruir();
     printf("Todos los tests del iterador pasaron correctamente.\n");
+
+    // --- Tests de Pila ---
+    void test_pila_crear_y_vacia();
+    void test_pila_apilar_y_cantidad();
+    void test_pila_ver_primero();
+    void test_pila_desapilar_LIFO();
+    void test_pila_destruir_null();
+    void test_pila_pop_sobre_vacia_repetido();
+    void test_pila_push_pop_alternado();
+    void test_pila_stress_push_muchos();
+
+    test_pila_crear_y_vacia();
+    test_pila_apilar_y_cantidad();
+    test_pila_ver_primero();
+    test_pila_desapilar_LIFO();
+    test_pila_destruir_null();
+    test_pila_pop_sobre_vacia_repetido();
+    test_pila_push_pop_alternado();
+    test_pila_stress_push_muchos();
+    printf("Todos los tests de pila pasaron correctamente.\n");
+
+    // --- Tests de Cola ---
+    void test_cola_crear_y_vacia();
+    void test_cola_encolar_y_cantidad();
+    void test_cola_ver_primero();
+    void test_cola_desencolar_FIFO();
+    void test_cola_destruir_null();
+    void test_cola_desencolar_vacia_repetido();
+    void test_cola_push_pop_alternado();
+    void test_cola_stress_encolar_muchos();
+
+    test_cola_crear_y_vacia();
+    test_cola_encolar_y_cantidad();
+    test_cola_ver_primero();
+    test_cola_desencolar_FIFO();
+    test_cola_destruir_null();
+    test_cola_desencolar_vacia_repetido();
+    test_cola_push_pop_alternado();
+    test_cola_stress_encolar_muchos();
+    printf("Todos los tests de cola pasaron correctamente.\n");
     return 0;
+}
+
+// ---------------- Pila: tests ----------------
+void test_pila_crear_y_vacia() {
+    pila_t* p = pila_crear();
+    assert(p != NULL);
+    assert(pila_cantidad(p) == 0);
+    assert(pila_ver_primero(p) == NULL);
+    assert(pila_desapilar(p) == NULL);
+    pila_destruir(p);
+    printf("test_pila_crear_y_vacia OK\n");
+}
+
+void test_pila_apilar_y_cantidad() {
+    pila_t* p = pila_crear();
+    int a = 10, b = 20;
+    assert(pila_apilar(p, &a) == true);
+    assert(pila_cantidad(p) == 1);
+    assert(pila_apilar(p, &b) == true);
+    assert(pila_cantidad(p) == 2);
+    // No acepta NULL como elemento
+    assert(pila_apilar(p, NULL) == false);
+    assert(pila_cantidad(p) == 2);
+    pila_destruir(p);
+    printf("test_pila_apilar_y_cantidad OK\n");
+}
+
+void test_pila_ver_primero() {
+    pila_t* p = pila_crear();
+    int a = 1, b = 2;
+    assert(pila_ver_primero(p) == NULL);
+    pila_apilar(p, &a);
+    assert(pila_ver_primero(p) == &a);
+    pila_apilar(p, &b);
+    assert(pila_ver_primero(p) == &b);
+    pila_destruir(p);
+    printf("test_pila_ver_primero OK\n");
+}
+
+void test_pila_desapilar_LIFO() {
+    pila_t* p = pila_crear();
+    int a = 1, b = 2, c = 3;
+    pila_apilar(p, &a);
+    pila_apilar(p, &b);
+    pila_apilar(p, &c);
+    assert(pila_cantidad(p) == 3);
+    assert(pila_desapilar(p) == &c);
+    assert(pila_ver_primero(p) == &b);
+    assert(pila_cantidad(p) == 2);
+    assert(pila_desapilar(p) == &b);
+    assert(pila_desapilar(p) == &a);
+    assert(pila_desapilar(p) == NULL);
+    assert(pila_cantidad(p) == 0);
+    pila_destruir(p);
+    printf("test_pila_desapilar_LIFO OK\n");
+}
+
+void test_pila_destruir_null() {
+    // Debe ser segura ante NULL
+    pila_destruir(NULL);
+    printf("test_pila_destruir_null OK\n");
+}
+
+void test_pila_pop_sobre_vacia_repetido() {
+    pila_t* p = pila_crear();
+    assert(pila_desapilar(p) == NULL);
+    assert(pila_desapilar(p) == NULL);
+    assert(pila_ver_primero(p) == NULL);
+    assert(pila_cantidad(p) == 0);
+    pila_destruir(p);
+    printf("test_pila_pop_sobre_vacia_repetido OK\n");
+}
+
+void test_pila_push_pop_alternado() {
+    pila_t* p = pila_crear();
+    int a = 1, b = 2, c = 3;
+    assert(pila_apilar(p, &a) == true);
+    assert(pila_ver_primero(p) == &a);
+    assert(pila_desapilar(p) == &a);
+    assert(pila_cantidad(p) == 0);
+    assert(pila_apilar(p, &b) == true);
+    assert(pila_apilar(p, &c) == true);
+    assert(pila_ver_primero(p) == &c);
+    assert(pila_desapilar(p) == &c);
+    assert(pila_ver_primero(p) == &b);
+    assert(pila_desapilar(p) == &b);
+    assert(pila_desapilar(p) == NULL);
+    pila_destruir(p);
+    printf("test_pila_push_pop_alternado OK\n");
+}
+
+void test_pila_stress_push_muchos() {
+    pila_t* p = pila_crear();
+    const int N = 1000;
+    int valores[N];
+    for (int i = 0; i < N; i++) {
+        valores[i] = i;
+        assert(pila_apilar(p, &valores[i]) == true);
+        assert(pila_cantidad(p) == (size_t)(i + 1));
+    }
+    // Verificar LIFO en un par de elementos
+    assert(*(int*)pila_ver_primero(p) == N - 1);
+    for (int i = N - 1; i >= N - 5; i--) {
+        int* x = (int*)pila_desapilar(p);
+        assert(x && *x == i);
+    }
+    // Limpiar
+    while (pila_desapilar(p) != NULL) {}
+    assert(pila_cantidad(p) == 0);
+    pila_destruir(p);
+    printf("test_pila_stress_push_muchos OK\n");
+}
+
+// ---------------- Cola: tests ----------------
+void test_cola_crear_y_vacia() {
+    cola_t* c = cola_crear();
+    assert(c != NULL);
+    assert(cola_cantidad(c) == 0);
+    assert(cola_ver_primero(c) == NULL);
+    assert(cola_desencolar(c) == NULL);
+    cola_destruir(c);
+    printf("test_cola_crear_y_vacia OK\n");
+}
+
+void test_cola_encolar_y_cantidad() {
+    cola_t* c = cola_crear();
+    int a = 10, b = 20;
+    assert(cola_encolar(c, &a) == true);
+    assert(cola_cantidad(c) == 1);
+    assert(cola_encolar(c, &b) == true);
+    assert(cola_cantidad(c) == 2);
+    // Aceptamos NULL? Según tu pila no, así que forzamos false
+    assert(cola_encolar(c, NULL) == false);
+    assert(cola_cantidad(c) == 2);
+    cola_destruir(c);
+    printf("test_cola_encolar_y_cantidad OK\n");
+}
+
+void test_cola_ver_primero() {
+    cola_t* c = cola_crear();
+    int a = 1, b = 2;
+    assert(cola_ver_primero(c) == NULL);
+    cola_encolar(c, &a);
+    assert(cola_ver_primero(c) == &a);
+    cola_encolar(c, &b);
+    assert(cola_ver_primero(c) == &a); // FIFO
+    cola_destruir(c);
+    printf("test_cola_ver_primero OK\n");
+}
+
+void test_cola_desencolar_FIFO() {
+    cola_t* c = cola_crear();
+    int a = 1, b = 2, c3 = 3;
+    cola_encolar(c, &a);
+    cola_encolar(c, &b);
+    cola_encolar(c, &c3);
+    assert(cola_cantidad(c) == 3);
+    assert(cola_desencolar(c) == &a);
+    assert(cola_ver_primero(c) == &b);
+    assert(cola_cantidad(c) == 2);
+    assert(cola_desencolar(c) == &b);
+    assert(cola_desencolar(c) == &c3);
+    assert(cola_desencolar(c) == NULL);
+    assert(cola_cantidad(c) == 0);
+    cola_destruir(c);
+    printf("test_cola_desencolar_FIFO OK\n");
+}
+
+void test_cola_destruir_null() {
+    cola_destruir(NULL);
+    printf("test_cola_destruir_null OK\n");
+}
+
+void test_cola_desencolar_vacia_repetido() {
+    cola_t* c = cola_crear();
+    assert(cola_desencolar(c) == NULL);
+    assert(cola_desencolar(c) == NULL);
+    assert(cola_ver_primero(c) == NULL);
+    assert(cola_cantidad(c) == 0);
+    cola_destruir(c);
+    printf("test_cola_desencolar_vacia_repetido OK\n");
+}
+
+void test_cola_push_pop_alternado() {
+    cola_t* c = cola_crear();
+    int a = 1, b = 2, d = 4;
+    assert(cola_encolar(c, &a) == true);
+    assert(cola_ver_primero(c) == &a);
+    assert(cola_desencolar(c) == &a);
+    assert(cola_cantidad(c) == 0);
+    assert(cola_encolar(c, &b) == true);
+    assert(cola_encolar(c, &d) == true);
+    assert(cola_ver_primero(c) == &b);
+    assert(cola_desencolar(c) == &b);
+    assert(cola_ver_primero(c) == &d);
+    assert(cola_desencolar(c) == &d);
+    assert(cola_desencolar(c) == NULL);
+    cola_destruir(c);
+    printf("test_cola_push_pop_alternado OK\n");
+}
+
+void test_cola_stress_encolar_muchos() {
+    cola_t* c = cola_crear();
+    const int N = 1000;
+    int valores[N];
+    for (int i = 0; i < N; i++) {
+        valores[i] = i;
+        assert(cola_encolar(c, &valores[i]) == true);
+        assert(cola_cantidad(c) == (size_t)(i + 1));
+    }
+    // Verificar FIFO parcial
+    assert(*(int*)cola_ver_primero(c) == 0);
+    for (int i = 0; i < 5; i++) {
+        int* x = (int*)cola_desencolar(c);
+        assert(x && *x == i);
+    }
+    // Limpiar
+    while (cola_desencolar(c) != NULL) {}
+    assert(cola_cantidad(c) == 0);
+    cola_destruir(c);
+    printf("test_cola_stress_encolar_muchos OK\n");
 }
