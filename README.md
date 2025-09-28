@@ -72,6 +72,9 @@ make valgrind
 Iterador externo (lista_iterador_crear, lista_iterador_hay_mas_elementos, lista_iterador_siguiente, lista_iterador_obtener_actual, lista_iterador_destruir)
 Permite recorrer la lista desde afuera, manteniendo el estado actual. Complejidad: O(1) por operación, porque solo accede o avanza el puntero actual, sin recorrer la lista completa.
 
+<div align="center">
+<img width="70%" src="img/ITERADOR.svg">
+</div>
 ---
 ## COLA ##
 
