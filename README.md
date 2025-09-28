@@ -135,28 +135,65 @@ Permite recorrer la lista desde afuera, manteniendo el estado actual. Complejida
     Complejidad: O(n), porque recorre y libera cada nodo.
 
 
----
-
-<div align="center">
-<img width="70%" src="img/diagrama1.svg">
-</div>
-
-En el archivo `sarasa.c` la función `funcion1` utiliza `realloc` para agrandar la zona de memoria utilizada para conquistar el mundo. El resultado de `realloc` lo guardo en una variable auxiliar para no perder el puntero original en caso de error:
-
-```c
-int *vector = realloc(vector_original, (n+1)*sizeof(int));
-
-if(vector == NULL)
-    return -1;
-vector_original = vector;
-```
-
-
-<div align="center">
-<img width="70%" src="img/diagrama2.svg">
-</div>
 
 ---
 
 ## Respuestas a las preguntas teóricas
-Incluír acá las respuestas a las preguntas del enunciado (si aplica).
+
+- Explicar qué es una lista, lista enlazada y lista doblemente enlazada
+    Una lista ENLAZADA se la puede describir como una suma de nodos, con datos y un puntero al siguiente nodo , formando asi un grupo de nodos conectados a traves de un puntero,
+    se puede visitar al siguiente y crear primitivas para manipular la lista, siempre y cuando se cumpla que solo se puede avanzar en una dirección (hacia adelante). 
+
+    La lista DOBLEMENTE ENLAZADA es lo mismo que la lista simplemente enlazada , pero con la difencia de un puntero a su nodo anterior , esto permite recorrer la lista en ambas direcciones (hacia adelante y hacia atrás) y facilita operaciones como inserción y eliminación en cualquier posición.
+
+- *VENTAJAS:*
+    **Lista simplemente enlazada:**
+    - Menor uso de memoria (un solo puntero por nodo).
+    - Implementación más sencilla.
+
+- *DESVENTAJAS:*  
+    - No se puede retroceder fácilmente.
+    - Eliminar un nodo requiere conocer el anterior, lo que puede requerir    recorrer la lista.
+
+- *VENTAJAS:*
+    **Lista doblemente enlazada:**
+    - Permite recorrer en ambos sentidos.
+    - Eliminar o insertar nodos en cualquier posición es más eficiente, ya que se puede acceder al anterior directamente.
+
+- *DESVENTAJAS:*  
+    - Mayor uso de memoria (dos punteros por nodo).
+    - Implementación más compleja (más casos a manejar en inserción/eliminación).
+
+---
+
+- Explicar qué es una lista circular y de qué maneras se puede implementar.
+    Una lista circular es una variante de una lista enlazada, en la que su ultimo nodo , en vez de apuntar a null , apunta a primer elemento de la lista, (como una sepiente comiendose su cola).Esto permite recorrer la lista de manera continua, sin llegar nunca a un final.
+
+    **Formas de implementación:**
+    - *Lista simplemente enlazada circular:*  
+      Cada nodo tiene un puntero al siguiente, y el último nodo apunta al primero. Se puede recorrer la lista indefinidamente en una sola dirección.
+
+    - *Lista doblemente enlazada circular:*  
+      Cada nodo tiene punteros al siguiente y al anterior. El ultimo nodo apunta al primero y el primero apunta al ultimo, permitiendo recorrer la lista en ambos sentidos de forma circular.
+
+---
+
+ - Explicar la diferencia de funcionamiento entre cola y pila.
+    La gran difencia entre la pila y cola es como se agregan o retiran elementos.
+
+    - **Cola:**  
+    Cumple con la regla FIFO (First In, First Out),  El primer elemento en entrar es el primero en salir. Ejemplo: encolar (agregar) elementos al final y desencolar (retirar) elementos del principio, osea el primero que se encolo.
+
+    - **Pila:**  
+    Cumple la regla LIFO (last In , First Out) El último elemento en entrar es el primero en salir. Ejemplo: apilar (agregar) elementos en el tope y desapilar (retirar) elementos del tope.
+    En resumen, la cola procesa los elementos en el orden en que llegan, mientras que la pila procesa primero el elemento más reciente.
+
+---
+- Explicar la diferencia entre un iterador interno y uno externo.
+
+    Un **iterador interno** es una función que recorre la estructura de datos aplicando una acción (función callback) a cada elemento. El usuario no controla el recorrido, solo define la acción a realizar. Ejemplo: `lista_con_cada_elemento()`.
+
+    Un **iterador externo** es un objeto que permite al usuario recorrer la estructura paso a paso, controlando cuándo avanzar y acceder al elemento actual. El usuario decide el ritmo y puede interrumpir el recorrido en cualquier momento. Ejemplo: `lista_iterador_crear()`, `lista_iterador_siguiente()`.
+
+    Se puede decir que el iterador interno hace el recorrido automaticamente, a diferencia del externo que le da el control al usuario.
+    
