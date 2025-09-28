@@ -75,6 +75,10 @@ Permite recorrer la lista desde afuera, manteniendo el estado actual. Complejida
 - COLA_CREAR()
     Reserva memoria para la estructura principal de la cola usando 'calloc', inicializando los punteros y el contador en cero.  
     Complejidad :O(1), porque solo se realiza una asignación de memoria.
+    
+<div align="center">
+<img width="70%" src="img/COLA_cREAR.svg">
+</div>
 
 - COLA_ENCOLAR()
     Agrega un elemento al final de la cola usando el puntero al último nodo.  
@@ -96,6 +100,7 @@ Permite recorrer la lista desde afuera, manteniendo el estado actual. Complejida
     Libera la memoria de todos los nodos de la cola.  
     Complejidad: O(n), porque recorre y libera cada nodo.
 
+---
 
 ## PILA ##
 
@@ -124,6 +129,7 @@ Permite recorrer la lista desde afuera, manteniendo el estado actual. Complejida
     Complejidad: O(n), porque recorre y libera cada nodo.
 
 
+---
 
 <div align="center">
 <img width="70%" src="img/diagrama1.svg">
