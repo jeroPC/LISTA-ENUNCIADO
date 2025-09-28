@@ -49,7 +49,10 @@ make valgrind
 
 - LISTA_INSERTAR()
     Inserta un elemento en una posición específica. Si es al principio, delega en una función auxiliar. Para otras posiciones, recorre la lista hasta la posición deseada. Complejidad: O(n) porque para insertar en una posición arbitraria (no al principio), hay que recorrer la lista hasta esa posición.
-
+    
+<div align="center">
+<img width="70%" src="img/NODOS.svg">
+</div>
 
 - LISTA_ELIMINAR_ELEMENTO 
     Elimina el elemento en la posición indicada. Si es el primero, lo elimina en tiempo constante. Para otras posiciones, recorre la lista hasta el nodo anterior. Complejidad: O(n) porque para eliminar en una posición arbitraria (no al principio), hay que recorrer la lista hasta el nodo anterior.
